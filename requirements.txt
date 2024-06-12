@@ -2,6 +2,6 @@ numpy
 tensorflow
 streamlit
 opencv-python-headless
-install tensorflow_hub
+tensorflow_hub
 
 
