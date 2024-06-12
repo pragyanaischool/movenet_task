@@ -1,6 +1,8 @@
 
-streamlit==1.20.0
-numpy==1.23.5
-opencv-python-headless==4.5.3.56
-tensorflow==2.16.1
+
+pip install numpy==1.23.5
+pip install tensorflow==2.16.1
+pip install streamlit==1.20.0
+pip install opencv-python-headless==4.5.3.56
+
 
