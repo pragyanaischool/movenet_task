@@ -1,5 +1,5 @@
 
 medipipe 
-pip install tensorflow==2.6.0
-pip install opencv-python-headless==4.5.3.56
-pip install streamlit==0.82.0
+pip install tensorflow
+pip install opencv-python-headless
+pip install streamlit
