@@ -4,5 +4,6 @@ streamlit
 opencv-python-headless
 tensorflow_hub
 wheel
+tensorrt
 
 
