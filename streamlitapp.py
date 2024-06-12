@@ -4,6 +4,9 @@ import numpy as np
 import tempfile
 import requests
 import os
+import tensorflow as tf
+import tensorflow_hub as hub
+import imageio
 
 # Function to download video from URL
 def download_video(url, output_path):
@@ -30,12 +33,12 @@ def toggle_webcam():
 def recognize_gesture(frame):
     movenet = hub.load("https://tfhub.dev/google/movenet/singlepose/lightning/4")
     # Define the mapping of keypoints to hand parts
-keypoint_names = ['zero', 'one', 'two', 'three', 'four', 'five', 'open_hand', 'close_hand', 'thumb', 'index',
-                  'middle', 'ring', 'pinky']
-# Define the connections between keypoints to draw lines for visualization
-connections = [(0, 1), (0, 2), (1, 3), (2, 4), (0, 5), (0, 6), (5, 7), (7, 9), (6, 8), (8, 10),
-               (5, 6), (5, 11), (6, 12), (11, 12)]
-# Function to perform pose detection on an image sequence or GIF
+    keypoint_names = ['zero', 'one', 'two', 'three', 'four', 'five', 'open_hand', 'close_hand', 'thumb', 'index',
+                      'middle', 'ring', 'pinky']
+    # Define the connections between keypoints to draw lines for visualization
+    connections = [(0, 1), (0, 2), (1, 3), (2, 4), (0, 5), (0, 6), (5, 7), (7, 9), (6, 8), (8, 10),
+                   (5, 6), (5, 11), (6, 12), (11, 12)]
+    # Function to perform pose detection on an image sequence or GIF
 def detect_pose_sequence(video_path):
     # Load the GIF
     gif = cv2.VideoCapture(video_path)
@@ -121,15 +124,18 @@ def visualize_and_create_pose_sequence(video_path, keypoints_list, output_video_
         fps = default_fps
     # Save the frames with keypoints overlay as a new GIF
     imageio.mimsave(output_video_path, frames_with_keypoints, fps=fps)
+    import gdown
 
-    # Add your hand gesture recognition code here using Movenet or any other model
-    # This function should return the processed frame with overlays or annotations
+# URL to the Google Drive file
+url = "https://drive.google.com/uc?id=1QJS0yZMu8zNGRyJr_jDUuIW1WT4kpZBM"
+output = "temp_video.mp4"
+
+# Download the file
+gdown.download(url, output, quiet=False)
     
     # Placeholder code to display a rectangle on the frame
-   # Placeholder code to display a rectangle on the frame
-processed_frame = cv2.rectangle(frame, (50, 50), (150, 150), (0, 255, 0), 2)
+    processed_frame = cv2.rectangle(frame, (50, 50), (150, 150), (0, 255, 0), 2)
 
-    
     return processed_frame
 
 # Main function to run the Streamlit app
