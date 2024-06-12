@@ -1,90 +1,69 @@
-
 import streamlit as st
 import cv2
 import numpy as np
-import tensorflow as tf
-import tensorflow_hub as hub  # Import TensorFlow Hub module
+import tempfile
+import requests
 import os
 
-# Function to download and load the MoveNet model
-def load_movenet_model():
-    model_url = "https://tfhub.dev/google/movenet/singlepose/lightning/4"
-    model_path = "movenet_lightning.tflite"
+# Function to download video from URL
+def download_video(url, output_path):
+    r = requests.get(url, stream=True)
+    with open(output_path, 'wb') as f:
+        for chunk in r.iter_content(chunk_size=1024):
+            if chunk:
+                f.write(chunk)
+
+# Function to enable/disable webcam
+def toggle_webcam():
+    global capture
+    if st.session_state.is_webcam_enabled:
+        capture = cv2.VideoCapture(0)
+    else:
+        if capture is not None:
+            capture.release()
+
+# Function to perform hand gesture recognition
+def recognize_gesture(frame):
+    # Add your hand gesture recognition code here using Movenet or any other model
+    # This function should return the processed frame with overlays or annotations
     
-    if not os.path.exists(model_path):
-        st.write("Downloading the MoveNet model...")
-        model = hub.load(model_url)
-        tf.saved_model.save(model, model_path)
-        st.write("Model downloaded and saved to", model_path)
-    else:
-        st.write("Using cached model at", model_path)
+    # Placeholder code to display a rectangle on the frame
+    processed_frame = cv2.rectangle(frame, (100, 100), (200, 200), (0, 255, 0), 2)
     
-    try:
-        interpreter = tf.lite.Interpreter(model_path=model_path)
-        interpreter.allocate_tensors()
-        return interpreter
-    except Exception as e:
-        st.error(f"Failed to load the model: {str(e)}")
-        return None
+    return processed_frame
 
-# Load the MoveNet model
-interpreter = load_movenet_model()
+# Main function to run the Streamlit app
+def main():
+    st.title("Hand Gesture Recognition App")
+    
+    # Download the video from URL
+    video_url = "https://drive.google.com/uc?id=1QJS0yZMu8zNGRyJr_jDUuIW1WT4kpZBM"
+    video_path = "temp_video.mp4"
+    download_video(video_url, video_path)
+    
+    # Display the video
+    st.video(video_path)
+    
+    # Add checkbox to enable/disable webcam
+    st.sidebar.markdown("## Webcam Control")
+    st.session_state.is_webcam_enabled = st.sidebar.checkbox("Enable Webcam", False, key="webcam_checkbox")
+    
+    # Toggle webcam based on checkbox state
+    toggle_webcam()
+    
+    # Main loop to process webcam feed
+    while st.session_state.is_webcam_enabled:
+        ret, frame = capture.read()
+        if ret:
+            # Process frame for hand gesture recognition
+            processed_frame = recognize_gesture(frame)
+            st.image(processed_frame, channels="BGR")
+        
+    # Release the webcam capture when done
+    if capture is not None:
+        capture.release()
 
-if interpreter:
-    input_details = interpreter.get_input_details()
-    output_details = interpreter.get_output_details()
-
-    def movenet_inference(image):
-        input_image = cv2.resize(image, (input_details[0]['shape'][2], input_details[0]['shape'][1]))
-        input_image = np.expand_dims(input_image, axis=0).astype(np.float32)
-        interpreter.set_tensor(input_details[0]['index'], input_image)
-        interpreter.invoke()
-        keypoints = interpreter.get_tensor(output_details[0]['index'])[0]
-        return keypoints
-
-    def draw_keypoints(image, keypoints):
-        h, w, _ = image.shape
-        for kp in keypoints:
-            x, y = int(kp[1] * w), int(kp[0] * h)
-            cv2.circle(image, (x, y), 5, (0, 255, 0), -1)
-        return image
-
-    st.title('Hand Gesture Recognition using MoveNet')
-
-    st.sidebar.title("Select Input Source")
-    input_source = st.sidebar.radio("Input Source", ("Webcam", "Video File"))
-
-    cap = None
-    if input_source == "Webcam":
-        st.write("Using webcam for real-time gesture recognition.")
-        cap = cv2.VideoCapture(0)
-        if not cap.isOpened():
-            st.error("Could not open webcam. Please ensure your webcam is connected and accessible.")
-            cap.release()
-            cap = None
-    else:
-        video_file = st.sidebar.file_uploader("Upload a Video", type=["mp4", "mov", "avi"])
-        if video_file is not None:
-            st.write("Using uploaded video for gesture recognition.")
-            temp_file = "uploaded_video.mp4"
-            with open(temp_file, "wb") as f:
-                f.write(video_file.getvalue())
-            cap = cv2.VideoCapture(temp_file)
-        else:
-            st.write("Please upload a video file.")
-
-    if cap is not None and cap.isOpened():
-        stframe = st.empty()
-        while cap.isOpened():
-            ret, frame = cap.read()
-            if not ret:
-                break
-            frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            keypoints = movenet_inference(frame_rgb)
-            frame_with_keypoints = draw_keypoints(frame_rgb, keypoints)
-            stframe.image(frame_with_keypoints, channels='RGB')
-        cap.release()
-    else:
-        st.write("No valid input source available. Please check your webcam or upload a video file.")
-
-    st.write("Hand gesture recognition using MoveNet model. The model detects keypoints on the hand to recognize gestures.")
+if __name__ == "__main__":
+    # Initialize webcam capture
+    capture = None
+    main()
