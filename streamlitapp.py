@@ -125,7 +125,9 @@ def visualize_and_create_pose_sequence(video_path, keypoints_list, output_video_
     # This function should return the processed frame with overlays or annotations
     
     # Placeholder code to display a rectangle on the frame
-    processed_frame = cv2.rectangle(frame, (100, 100), (200, 200), (0, 255, 0), 2)
+   # Placeholder code to display a rectangle on the frame
+processed_frame = cv2.rectangle(frame, (50, 50), (150, 150), (0, 255, 0), 2)
+
     
     return processed_frame
 
