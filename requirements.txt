@@ -2,4 +2,4 @@
 medipipe 
 tensorflow
 opencv-python-headless
-streamlit
+pip install streamlit
