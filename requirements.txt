@@ -4,6 +4,5 @@ streamlit
 opencv-python-headless
 tensorflow_hub
 wheel
- tensorrt
- tensorrt_dispatc
+tensorrt_dispatc
 
