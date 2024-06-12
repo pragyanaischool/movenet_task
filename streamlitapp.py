@@ -2,19 +2,22 @@ import streamlit as st
 import cv2
 import numpy as np
 import tensorflow as tf
+import tensorflow_hub as hub
 import os
 
-# Path to MoveNet model
-movenet_model_path = 'movenet_model.tflite'
-
-# Function to load the TFLite model and check if the file is valid
-def load_model(model_path):
+# Function to download and load the MoveNet model
+def load_movenet_model():
+    model_url = "https://tfhub.dev/google/movenet/singlepose/lightning/4"
+    model_path = "movenet_lightning.tflite"
+    
     if not os.path.exists(model_path):
-        st.error(f"Model file not found: {model_path}")
-        return None
-    elif os.path.getsize(model_path) < 7:  # Ensure the file is not empty
-        st.error(f"Model file appears to be corrupted or incomplete: {model_path}")
-        return None
+        st.write("Downloading the MoveNet model...")
+        model = hub.load(model_url)
+        tf.saved_model.save(model, model_path)
+        st.write("Model downloaded and saved to", model_path)
+    else:
+        st.write("Using cached model at", model_path)
+    
     try:
         interpreter = tf.lite.Interpreter(model_path=model_path)
         interpreter.allocate_tensors()
@@ -24,7 +27,7 @@ def load_model(model_path):
         return None
 
 # Load the MoveNet model
-interpreter = load_model(movenet_model_path)
+interpreter = load_movenet_model()
 
 if interpreter:
     input_details = interpreter.get_input_details()
