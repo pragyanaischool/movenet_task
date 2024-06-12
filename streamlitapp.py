@@ -2,7 +2,6 @@ import streamlit as st
 import cv2
 import numpy as np
 import tensorflow as tf
-import tensorflow_hub as hub
 import os
 
 # Function to download and load the MoveNet model
