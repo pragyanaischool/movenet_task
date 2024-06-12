@@ -126,15 +126,15 @@ def visualize_and_create_pose_sequence(video_path, keypoints_list, output_video_
     imageio.mimsave(output_video_path, frames_with_keypoints, fps=fps)
     import gdown
 
-# URL to the Google Drive file
-url = "https://drive.google.com/uc?id=1QJS0yZMu8zNGRyJr_jDUuIW1WT4kpZBM"
-output = "temp_video.mp4"
+    # URL to the Google Drive file
+    url = "https://drive.google.com/uc?id=1QJS0yZMu8zNGRyJr_jDUuIW1WT4kpZBM"
+    output = "temp_video.mp4"
 
-# Download the file
-gdown.download(url, output, quiet=False)
+    # Download the file
+    gdown.download(url, output, quiet=False)
     
     # Placeholder code to display a rectangle on the frame
-processed_frame = cv2.rectangle(frame, (50, 50), (150, 150), (0, 255, 0), 2)
+    processed_frame = cv2.rectangle(frame, (50, 50), (150, 150), (0, 255, 0), 2)
 
     return processed_frame
 
