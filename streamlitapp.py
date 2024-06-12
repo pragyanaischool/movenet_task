@@ -16,11 +16,14 @@ def download_video(url, output_path):
 # Function to enable/disable webcam
 def toggle_webcam():
     global capture
-    if st.session_state.is_webcam_enabled:
-        capture = cv2.VideoCapture(0)
-    else:
-        if capture is not None:
-            capture.release()
+    try:
+        if st.session_state.is_webcam_enabled:
+            capture = cv2.VideoCapture(0)  # Try different indices: 0, 1, 2, etc.
+        else:
+            if capture is not None:
+                capture.release()
+    except Exception as e:
+        st.error(f"Error accessing webcam: {e}")
 
 # Function to perform hand gesture recognition
 def recognize_gesture(frame):
