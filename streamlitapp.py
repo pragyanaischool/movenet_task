@@ -136,7 +136,7 @@ gdown.download(url, output, quiet=False)
     # Placeholder code to display a rectangle on the frame
 processed_frame = cv2.rectangle(frame, (50, 50), (150, 150), (0, 255, 0), 2)
 
-return processed_frame
+      return processed_frame
 
 # Main function to run the Streamlit app
 def main():
@@ -173,3 +173,4 @@ if __name__ == "__main__":
     # Initialize webcam capture
     capture = None
     main()
+
