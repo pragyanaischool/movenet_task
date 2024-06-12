@@ -18,7 +18,8 @@ def toggle_webcam():
     global capture
     try:
         if st.session_state.is_webcam_enabled:
-            capture = cv2.VideoCapture(0)  # Try different indices: 0, 1, 2, etc.
+            camera_index = 0  # Replace with the index you found
+            capture = cv2.VideoCapture(camera_index)
         else:
             if capture is not None:
                 capture.release()
