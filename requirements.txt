@@ -3,7 +3,7 @@ tensorflow
 streamlit
 opencv-python-headless
 tensorflow_hub
-python3 -m pip install --upgrade pip
-python3 -m pip install wheel
-python3 -m pip install --upgrade tensorrt
-python3 -m pip install --upgrade tensorrt_dispatc
+wheel
+ tensorrt
+ tensorrt_dispatc
+
