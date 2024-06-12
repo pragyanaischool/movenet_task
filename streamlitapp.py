@@ -134,7 +134,7 @@ output = "temp_video.mp4"
 gdown.download(url, output, quiet=False)
     
     # Placeholder code to display a rectangle on the frame
-    processed_frame = cv2.rectangle(frame, (50, 50), (150, 150), (0, 255, 0), 2)
+processed_frame = cv2.rectangle(frame, (50, 50), (150, 150), (0, 255, 0), 2)
 
     return processed_frame
 
