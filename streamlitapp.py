@@ -24,6 +24,7 @@ def toggle_webcam():
 
 # Function to perform hand gesture recognition
 def recognize_gesture(frame):
+    movenet = hub.load("https://tfhub.dev/google/movenet/singlepose/lightning/4")
     # Add your hand gesture recognition code here using Movenet or any other model
     # This function should return the processed frame with overlays or annotations
     
